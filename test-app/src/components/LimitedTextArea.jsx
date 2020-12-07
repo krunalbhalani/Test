@@ -1,6 +1,9 @@
 import React from 'react'
+import styled from "styled-components";
 
-const LimitedTextarea = ({ rows, cols, value, limit, onChange, name, id }) => {
+
+
+const LimitedTextarea = ({ rows, cols, value, limit, onChange, name, id, error }) => {
     const [content, setContent] = React.useState(value.slice(0, limit));
   
     const setFormattedContent = React.useCallback(
@@ -21,9 +24,13 @@ const LimitedTextarea = ({ rows, cols, value, limit, onChange, name, id }) => {
           onChange={event => setFormattedContent(event.target.value)}
           value={content}
         />
-        <div>
+         {error.description &&
+            <span className="tool_tip">{error.description}</span>
+        }
+        <div className="fieldlabel">
           {content.length}/{limit}
         </div>
+        
       </div>
     );
   };

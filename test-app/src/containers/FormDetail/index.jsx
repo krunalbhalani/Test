@@ -7,15 +7,15 @@ import {fetchcoordinator, fetchresponsible} from '../../actions/index'
 
 
 const MainDiv = styled.div`
-  background-color: skyblue;
+  background-color: gray;
   font-size: 32px;
   color: white;
   width:100%
-  height: 100%
+  height: 100%;
 `;
 
 const MainDivTitle = styled.div`
-  background-color: blue;
+  background-color: black;
   font-size: 32px;
   font-family: Arial, Helvetica, sans-serif;
   color: white;
@@ -25,7 +25,7 @@ const MainDivTitle = styled.div`
 `;
 
 const SubDiv = styled.div`
-  background-color: white;
+  background-color: lightgrey;
   font-size: 32px;
   margin: 40px;
 `;
@@ -50,12 +50,15 @@ const FormDetail = (props) => {
   const [duration, setDuration] = useState('')
   const[fee, setFee] = useState('')
   const [error, setError] = useState({})
+  const [issubmitted, setIsSubmitted] = useState(false)
 
   const titleInput = useRef();
   const dateInput = useRef();
   const feeInput = useRef();
   const emailInput = useRef();
   const rewardInput = useRef();
+  const descriptionInput = useRef();
+  const durationInput = useRef();
 
   const ERROR = {
     title: '',
@@ -67,6 +70,7 @@ const FormDetail = (props) => {
     date: '',
     time: '',
     fee: '',
+    durationInput: '',
     isError: false,
   }
   
@@ -88,6 +92,11 @@ const FormDetail = (props) => {
       ERROR.title = "Title is required."
       isError = true
       titleInput.current.focus();
+    }
+
+    if(description == '') {
+      ERROR.description = "Description is required."
+      isError = true
     }
 
     if(date == '') {
@@ -129,13 +138,22 @@ const FormDetail = (props) => {
         feeInput.current.focus();
       }
     }
+
+    if(duration != ''){
+      const re = /^[0-9\b]+$/;
+      if(!re.test(duration)){
+        ERROR.duration = 'Only Numbers allowed'
+        isError = true
+        durationInput.current.focus();
+      }
+    }
+    
     
     setError(ERROR)
     return isError
   }
 
   const setDescriptionvalue = (e) => {
-    console.log('setDescriptionValue===', e)
     setDescription(e)
   }
 
@@ -143,227 +161,247 @@ const FormDetail = (props) => {
     const isError = Validation()
 
     if(!isError) {
-      console.log('title===', title)
-      console.log('description===', description)
-      console.log('category==', category)
-      console.log('fieldvalue==', fieldvalue)
-      console.log('Fee==', fee)
-      console.log('Reward==', reward)
-      console.log('Responsible=', responsible)
-        
-      console.log('Email=', email)
-      console.log('Date=', date)
-      console.log('Time=', time)
-
+      setIsSubmitted(true)
+      let objCoordinator = props.responsible.find(o => o.id === parseInt(responsible));
       //create object
       var finalResult = {
         title: title,
         description: description,
-        category_id : category,
+        category_id : parseInt(category),
         paid_event: fieldvalue == 'Paid Event' ? true: false,
-        event_fee: fee,
-        reward: reward,
-        date: date,
-        duration: duration,
+        event_fee: fee != '' ? parseInt(fee) : '', 
+        reward: reward != '' ? parseInt(reward) : '',
+        date: date + time,
+        duration: duration != '' ? parseInt(duration) : '',
+        coordinator: {
+          id: objCoordinator.id,
+          email: objCoordinator.email,
+        }
       }
 
-      console.log('FinalResult==', finalResult)
+      console.log('Final Object==', finalResult)
     }
   }
 
   return (
     <MainDiv>
-        <MainDivTitle>NEW EVENT</MainDivTitle>
-        <form>
-          <SubDiv>
-          <div className="row">
-            <div className="singleColumn">
-            About
-            <hr /> 
+          <MainDivTitle>NEW EVENT</MainDivTitle>
+          { !issubmitted &&
+          <div>
+          <form>
+            <SubDiv>
+            <div className="row">
+              <div className="singleColumn">
+              About
+              <hr /> 
+              </div>
             </div>
-          </div>
-          <div className="row">
-              <div className="column1">TITLE *</div>
-              <div className="column2">
-                <input
-                  type="text"
-                  size={50}
-                  id="title"
-                  ref={titleInput}
-                  onChange={(e)=> setTitle(e.target.value)}
-                  name="title"
-                  required
-                />
-                {error.title &&
-                  <span className="tooltiptext">{error.title}</span>
-                }
-              </div>
-          </div>
-          <div className="row">
-              <div className="column1">DESCRIPTION  *</div>
-              <div className="column2">
-                <LimitedTextarea rows={10} cols={60} limit={140} value="" 
-                name="description" id="description" onChange={(e) => setDescriptionvalue(e)} />
-              </div>
-          </div>
-          <div className="row">
-              <div className="column1">CATEGORY  *</div>
-              <div className="column2">
-                <select
-                    name="category"
-                    onChange={(e)=> setCategory(e.target.value)}
-                    style={{ display: 'block' }}
-                >
-                { props.coordinator.map((option, index) => (
-                    <option key={index} value={option.id}>{option.name}</option>
-                ))}
-                </select>
-              </div>
-          </div>
-          <div className="row">
-              <div className="column1">PAYMENT</div>
-              <div className="column2">
-                <input
-                type="radio"
-                name="test"
-                value="Free Event"
-                onChange={() => setFieldValue("Free Event")}
-                /><span className="radiolable">Free Event</span>
-                <input
-                type="radio"
-                name="test"
-                value="Paid Event"
-                onChange={() => setFieldValue("Paid Event")}
-                /><span className="radiolable">Paid Event</span>
-                {fieldvalue == 'Paid Event' && 
-                  <span>
-                    <input
-                      type="text"
-                      name="Fee"
-                      ref={feeInput}
-                      size={10}
-                      onChange={(e)=> setFee(e.target.value)}
-                      required
-                    /><span>$</span>
-                     {error.fee &&
-                      <span className="tooltiptext">{error.fee}</span>
-                    }
-                  </span>
-                }
-              </div>
-          </div>
-          <div className="row">
-              <div className="column1">REWARD</div>
-              <div className="column2">
-                <input
-                  type="text"
-                  id="first-name-input"
-                  placeholder="Enter Reward"
-                  name="reward"
-                  ref={rewardInput}
-                  onChange={(e)=> setReward(e.target.value)}
-                  required
-                />
-                {error.reward &&
-                  <span className="tooltiptext">{error.reward}</span>
-                }
-              </div>
-          </div>
-          </SubDiv>
-          <SubDiv>
-          <div className="row">
-            <div className="singleColumn">
-            Coordinator
-            <hr /> 
+            <div className="row">
+                <div className="column1">TITLE *</div>
+                <div className="column2">
+                  <input
+                    type="text"
+                    size={50}
+                    id="title"
+                    ref={titleInput}
+                    onChange={(e)=> setTitle(e.target.value)}
+                    name="title"
+                    className="col-4"
+                    required
+                  />
+                  {error.title &&
+                    <span className="tool_tip">{error.title}</span>
+                  }
+                </div>
             </div>
-          </div>
-          <div className="row">
-              <div className="column1">RESPONSIBLE</div>
-              <div className="column2">
+            <div className="row">
+                <div className="column1">DESCRIPTION  *</div>
+                <div className="column2">
+                  <LimitedTextarea rows={10} cols={60} limit={140} value=""
+                  name="description" id="description" onChange={(e) => setDescriptionvalue(e)} error={error} />
+                </div>
+            </div>
+            <div className="row">
+                <div className="column1">CATEGORY</div>
+                <div className="column2">
                   <select
-                      name="responsible"
-                      onChange={(e)=> setResponsible(e.target.value)}
+                      name="category"
+                      onChange={(e)=> setCategory(e.target.value)}
                       style={{ display: 'block' }}
                   >
-                  { props.responsible.map((option, index) => (
-                      <option key={index} value={option.id}>{option.name} {option.lastname}</option>
+                  { props.coordinator.map((option, index) => (
+                      <option key={index} value={option.id}>{option.name}</option>
                   ))}
                   </select>
-              </div>
-          </div>
-          <div className="row">
-              <div className="column1">Email</div>
-              <div className="column2">
-                <input
-                  type="text"
-                  id="email"
-                  placeholder="Enter email"
-                  name="email"
-                  ref={emailInput}
-                  onChange={(e)=> setEmail(e.target.value)}
-                  required
-                />
-                {error.email &&
-                  <span className="tooltiptext">{error.email}</span>
-                }
-              </div>
-          </div>
-          </SubDiv>
-          <SubDiv>
-          <div className="row">
-            <div className="singleColumn">
-            WHEN
-            <hr /> 
+                </div>
             </div>
-          </div>
-          <div className="row">
-              <div className="column1">STARTS ON</div>
-              <div className="column2">
-                <input
-                  type="date"
-                  id="date"
-                  name="date"
-                  ref={dateInput}
-                  onChange={(e)=> setDate(e.target.value)}
-                  required
-                />
-                <input
-                type="time"
-                id="time"
-                name="time"
-                min="01:00" max="12:00"
-                pattern="^(1[0-2]|[1-9])$:[0-9]{2}"
-                onChange={(e)=> setTime(e.target.value)}
-                required
-              />
-              {error.date &&
-                  <span className="tooltiptext">{error.date}</span>
-                }
+            <div className="row">
+                <div className="column1">PAYMENT</div>
+                <div className="column2">
+                  <input
+                  type="radio"
+                  name="test"
+                  value="Free Event"
+                  onChange={() => setFieldValue("Free Event")}
+                  /><span className="fieldlabel">Free Event</span>
+                  <input
+                  type="radio"
+                  name="test"
+                  value="Paid Event"
+                  onChange={() => setFieldValue("Paid Event")}
+                  /><span className="fieldlabel">Paid Event</span>
+                  {fieldvalue == 'Paid Event' && 
+                    <span className="fieldmargin">
+                      <input
+                        type="text"
+                        name="Fee"
+                        ref={feeInput}
+                        size={10}
+                        onChange={(e)=> setFee(e.target.value)}
+                        required
+                      /><span className="fieldlabel fieldmargin">$</span>
+                      {error.fee &&
+                        <span className="tool_tip">{error.fee}</span>
+                      }
+                    </span>
+                  }
+                </div>
+            </div>
+            <div className="row">
+                <div className="column1">REWARD</div>
+                <div className="column2">
+                  <input
+                    type="text"
+                    id="first-name-input"
+                    placeholder="Enter Reward"
+                    name="reward"
+                    ref={rewardInput}
+                    className="col-2"
+                    onChange={(e)=> setReward(e.target.value)}
+                  />
+                  {error.reward &&
+                    <span className="tool_tip">{error.reward}</span>
+                  }
+                </div>
+            </div>
+            </SubDiv>
+            <SubDiv>
+            <div className="row">
+              <div className="singleColumn">
+              Coordinator
+              <hr /> 
               </div>
-          </div>
-          <div className="row">
-              <div className="column1">DURATION</div>
-              <div className="column2">
-                <input
-                  type="text"
-                  id="duration"
-                  onChange={(e)=> setDuration(e.target.value)}
-                  name="duration"
-                  required
-                />
+            </div>
+            <div className="row">
+                <div className="column1">RESPONSIBLE *</div>
+                <div className="column2">
+                    <select
+                        name="responsible"
+                        onChange={(e)=> setResponsible(e.target.value)}
+                        style={{ display: 'block' }}
+                    >
+                    { props.responsible.map((option, index) => (
+                        <option key={index} value={option.id}>{option.name} {option.lastname}</option>
+                    ))}
+                    </select>
+                </div>
+            </div>
+            <div className="row">
+                <div className="column1">EMAIL</div>
+                <div className="column2">
+                  <input
+                    type="text"
+                    id="email"
+                    placeholder="Enter email"
+                    name="email"
+                    ref={emailInput}
+                    className="col-4"
+                    onChange={(e)=> setEmail(e.target.value)}
+                  />
+                  {error.email &&
+                    <span className="tool_tip">{error.email}</span>
+                  }
+                </div>
+            </div>
+            </SubDiv>
+            <SubDiv>
+            <div className="row">
+              <div className="singleColumn">
+              WHEN
+              <hr /> 
               </div>
+            </div>
+            <div className="row">
+                <div className="column1">STARTS ON *</div>
+                <div className="column2">
+                  <input
+                    type="date"
+                    id="date"
+                    name="date"
+                    ref={dateInput}
+                    onChange={(e)=> setDate(e.target.value)}
+                    required
+                  />
+                  <input
+                  type="time"
+                  id="time"
+                  name="time"
+                  min="01:00" max="12:00"
+                  pattern="^(1[0-2]|[1-9])$:[0-9]{2}"
+                  onChange={(e)=> setTime(e.target.value)}
+                  className="col-2"
+                />
+                {error.date &&
+                    <span className="tool_tip">{error.date}</span>
+                  }
+                </div>
+            </div>
+            <div className="row">
+                <div className="column1">DURATION</div>
+                <div className="column2">
+                  <input
+                    type="text"
+                    id="duration"
+                    onChange={(e)=> setDuration(e.target.value)}
+                    name="duration"
+                    ref={durationInput}
+                    className="col-2"
+                  />
+                  {error.duration &&
+                    <span className="tool_tip">{error.duration}</span>
+                  }
+                </div>
+            </div>
+            </SubDiv>
+            <div className="row">
+              <input type="button" value="PUBLISH EVENT" onClick={handleSubmit} />
+            </div>
+          </form>
           </div>
-          </SubDiv>
-          <div className="row">
-            <input type="button" value="PUBLISH EVENT" onClick={handleSubmit} />
+          }
+          {issubmitted &&
+          <div>
+          <form>
+            <SubDiv>
+            <div className="row">
+              <div className="singleColumn">
+              Success
+              </div>
+            </div>
+            <div className="row">
+                <div className="column1">Event has been created</div>
+            </div>
+            
+            </SubDiv>
+            <div className="row" />
+          </form>
           </div>
-        </form>
+          }
     </MainDiv>
   );
 }
 
 const mapStateToProps = (state) => {
-  console.log('state==', state)
   return {
     coordinator: state.coordinator,
     responsible: state.responsible,

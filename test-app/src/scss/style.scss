@@ -1,10 +1,123 @@
 $backcolor: white;
-
+$columncolor: black;
+$labelText: black;
 
 body {
-   background-color:$backcolor;
-   padding:100px;
+    background-color:$backcolor;
 }
+
+
+.singleColumn {
+    flex: 100%;
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color:$columncolor;
+    margin-top: 10px;
+}
+
+.column1 {
+    flex: 12%;
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    color:$columncolor;
+    text-align: left;
+    padding: 10px;
+    font-weight: bold;
+    padding-left: 0px !important;
+}
+
+/* Error Tool Tip Styles*/
+.tool_tip {
+    /* font */
+    font-family: Helvetica;
+    font-size: 13px;
+    font-weight: bold;
+    color: #cc0033;
+    line-height: 20px;
+    /* background */
+    background-color: #fce4e4;
+    border: 1px solid #fcc2c3;
+    border-radius: 7px;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+    /* positioning */
+    position: relative;
+    padding: 7px 11px 4px;
+    margin-left: 10px; /* distance between error tip and element it points to */
+  }
+  
+  /* Left Arrow Styles */
+  .tool_tip:after, .tool_tip:before {
+    content: '';
+    border: 7px solid transparent;
+    position: absolute;
+    top: 10px;
+  }
+  .tool_tip:after {
+    border-right: 7px solid #fce4e4;
+    left: -14px;
+  }
+  .tool_tip:before {
+    border-right: 7px solid #fcc2c3;
+    left: -15px;
+  }
+  
+
+@media(min-width:768px)
+{
+    body {
+    background-color:$backcolor;
+    padding:100px !important;
+    }
+
+    .singleColumn {
+        flex: 100%;
+        font-size: 20px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+        color:$columncolor;
+        margin-left: 100px;
+        margin-top: 10px;
+    }
+
+    .column1 {
+        flex: 12%;
+        font-size: 15px;
+        font-family: Arial, Helvetica, sans-serif;
+        color:$columncolor;
+        text-align: left;
+        padding: 10px;
+        margin-left: 100px;
+        font-weight: bold;
+    }
+
+    .col-2{
+        width: 10% !important;
+    }
+
+    .col-3{
+        width: 25% !important;
+    }
+
+    .col-4{
+        width: 33.3% !important;
+    }
+
+    .col-5{
+        width: 40% !important;
+    }
+
+    .col-6{
+        width: 50% !important;
+    }
+
+    .col-12{
+        width: 100% !important;
+    }
+}
+
+
 
 
 
@@ -17,13 +130,25 @@ input[type=text], select {
     box-sizing: border-box;
 }
 
+@media(max-width:767px)
+{
+    input[type=text], select,textarea {
+        width: 100%;
+    }
+}
 
-.radiolable {
+
+.fieldmargin {
+margin: 5px;
+}
+
+.fieldlabel {
     font-size: 15px;
     font-family: Arial, Helvetica, sans-serif;
-    color:black;
+    color: $labelText;
     font-weight: bold; 
     }
+
 
     input[type=Date] {
         width: 20%;
@@ -45,6 +170,17 @@ input[type=text], select {
             box-sizing: border-box;
             }
 
+@media(max-width:767px)
+{
+    input[type=Date] {
+        width: 50% !important;
+    }
+
+    input[type=Time] {
+        width: 50% !important;
+    }
+}
+
 input[type=button] {
 width: 30%;
 background-color:orange;
@@ -55,6 +191,15 @@ border: none;
 border-radius: 4px;
 cursor: pointer;
 text-align: center;
+}
+
+@media(max-width:767px)
+{
+    input[type=button] {
+        margin: auto !important;
+        text-align: center !important;
+        margin-bottom: 30px !important;
+    }
 }
 
 .roundbox {
@@ -75,7 +220,7 @@ hr {
 } 
 
 .label {
-    color: black; 
+    color:$labelText; 
     font-weight: bold; 
     font-family: Arial, Helvetica, sans-serif;
     display: block; 
@@ -104,42 +249,9 @@ hr {
     margin:10px;
 }
 
-.singleColumn {
-    flex: 100%;
-    font-size: 20px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bold;
-    color: blue;
-    margin-left: 100px;
-    margin-top: 10px;
-}
-.column1 {
-    flex: 12%;
-    font-size: 15px;
-    font-family: Arial, Helvetica, sans-serif;
-    color: black;
-    text-align: left;
-    padding: 10px;
-    margin-left: 100px;
-    font-weight: bold;
-}
+
 .column2 {
     flex: 80%;
-}
-
-.tooltiptext {
-    visibility: visible;
-    width: 120px;
-    background-color: blueviolet;
-    color: #fff;
-    text-align: center;
-    font-size: 15px;
-    border-radius: 6px;
-    padding: 10px;
-    margin: 10px;
-    position: relative;
-    font-family: Arial, Helvetica, sans-serif;
-    z-index: 1;
 }
 
 /* Responsive layout - makes a one column-layout instead of a two-column layout */
