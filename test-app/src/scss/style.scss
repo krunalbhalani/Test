@@ -1,4 +1,4 @@
-$backcolor: blue;
+$backcolor: white;
 
 
 body {
@@ -9,140 +9,145 @@ body {
 
 
 input[type=text], select {
-    width: 30%;
-    padding: 12px 20px;
+    padding: 10px 9px;
     margin: 8px 0;
     display: inline-block;
     border: 1px solid black;
     border-radius: 4px;
     box-sizing: border-box;
+}
+
+
+.radiolable {
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    color:black;
+    font-weight: bold; 
     }
-  
-    
-    .radiolable {
-      font-size: 15px;
-      font-family: Arial, Helvetica, sans-serif;
-      font-weight: bold; 
-      }
-  
-       input[type=Date] {
-          width: 20%;
-          padding: 12px 20px;
-          margin: 8px 0;
-          display: inline-block;
-          border: 1px solid black;
-          border-radius: 10px;
-          box-sizing: border-box;
-          }
-  
-          input[type=Time] {
-              width: 20%;
-              padding: 12px 20px;
-              margin: 8px 0;
-              display: inline-block;
-              border: 1px solid black;
-              border-radius: 10px;
-              box-sizing: border-box;
-              }
-    
-  input[type=button] {
-    width: 30%;
-    background-color:orange;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    }
-  
-  .roundbox {
-      border-radius: 25px;
-      background-color: cadetblue;
-      background-position: left top;
-      background-repeat: repeat;
-      padding: 20px;
-    }
-  
-    hr { 
-      position: relative; 
-      top: 5px; 
-      border: 1px solid black; 
-      height: 1px; 
-      background: black; 
-      margin-bottom: 10px; 
-  } 
-    
-  .label {
-      color: black; 
-      font-weight: bold; 
-      font-family: Arial, Helvetica, sans-serif;
-      display: block; 
-    }
-  
-    * {
-      box-sizing: border-box;
-    }
-    
-    .flex-container {
-      display: flex;
-      flex-direction: row;
-      width:100%;
-    }
-    
-    .flex-item {
-      background-color: #f1f1f1;
-      padding: 10px;
-      flex: 100%;
-    }
-    
+
+    input[type=Date] {
+        width: 20%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid black;
+        border-radius: 10px;
+        box-sizing: border-box;
+        }
+
+        input[type=Time] {
+            width: 20%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid black;
+            border-radius: 10px;
+            box-sizing: border-box;
+            }
+
+input[type=button] {
+width: 30%;
+background-color:orange;
+color: white;
+padding: 14px 20px;
+margin: 8px 450px 30px;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+text-align: center;
+}
+
+.roundbox {
+    border-radius: 25px;
+    background-color: cadetblue;
+    background-position: left top;
+    background-repeat: repeat;
+    padding: 20px;
+}
+
+hr { 
+    position: relative; 
+    top: 5px; 
+    border: 1px solid black; 
+    height: 1px; 
+    background: black; 
+    margin-bottom: 10px; 
+} 
+
+.label {
+    color: black; 
+    font-weight: bold; 
+    font-family: Arial, Helvetica, sans-serif;
+    display: block; 
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    width:100%;
+}
+
+.flex-item {
+    background-color: #f1f1f1;
+    padding: 10px;
+    flex: 100%;
+}
+
+.row {
+    display: flex;
+    flex:100%;
+    flex-direction: row;
+    margin:10px;
+}
+
+.singleColumn {
+    flex: 100%;
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: blue;
+    margin-left: 100px;
+    margin-top: 10px;
+}
+.column1 {
+    flex: 12%;
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: black;
+    text-align: left;
+    padding: 10px;
+    margin-left: 100px;
+    font-weight: bold;
+}
+.column2 {
+    flex: 80%;
+}
+
+.tooltiptext {
+    visibility: visible;
+    width: 120px;
+    background-color: blueviolet;
+    color: #fff;
+    text-align: center;
+    font-size: 15px;
+    border-radius: 6px;
+    padding: 10px;
+    margin: 10px;
+    position: relative;
+    font-family: Arial, Helvetica, sans-serif;
+    z-index: 1;
+}
+
+/* Responsive layout - makes a one column-layout instead of a two-column layout */
+@media (max-width: 800px) {
     .row {
-      display: flex;
-      flex:100%;
-      flex-direction: row;
-      margin:10px;
+    display: flex;
+    align-content: left;
+    justify-content: left;
+    flex-direction: column;
     }
-    
-    .singleColumn {
-        flex: 100%;
-        font-size: 20px;
-        font-family: Arial, Helvetica, sans-serif;
-        font-weight: bold;
-        color: blue;
-        margin-left: 100px;
-        margin-top: 10px;
-    }
-    .column1 {
-      flex: 12%;
-      font-size: 15px;
-      font-family: Arial, Helvetica, sans-serif;
-      text-align: left;
-      padding: 10px;
-      margin-left: 100px;
-      font-weight: bold;
-    }
-    .column2 {
-      flex: 80%;
-      
-    }
-  
-    .tooltiptext {
-      visibility: visible;
-      width: 120px;
-      background-color: blueviolet;
-      color: #fff;
-      text-align: center;
-      border-radius: 6px;
-      padding: 10px;
-      margin: 10px;
-      position: relative;
-      font-family: Arial, Helvetica, sans-serif;
-      z-index: 1;
-    }
-  
-    /* Responsive layout - makes a one column-layout instead of a two-column layout */
-    @media (max-width: 800px) {
-      .flex-item-right, .flex-item-left {
-        flex: 100%;
-      }
-    }
+}

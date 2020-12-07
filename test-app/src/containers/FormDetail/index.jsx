@@ -7,9 +7,32 @@ import {fetchcoordinator, fetchresponsible} from '../../actions/index'
 
 
 const MainDiv = styled.div`
-  background-color: grey;
+  background-color: skyblue;
   font-size: 32px;
   color: white;
+  width:100%
+  height: 100%
+`;
+
+const MainDivTitle = styled.div`
+  background-color: blue;
+  font-size: 32px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+  width:100%;
+  height:60px;
+  text-align: center;
+`;
+
+const SubDiv = styled.div`
+  background-color: white;
+  font-size: 32px;
+  margin: 40px;
+`;
+
+
+const buttonSubmit = styled.div`
+  text-align: center;
 `;
 
 
@@ -25,10 +48,14 @@ const FormDetail = (props) => {
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
   const [duration, setDuration] = useState('')
+  const[fee, setFee] = useState('')
   const [error, setError] = useState({})
 
   const titleInput = useRef();
   const dateInput = useRef();
+  const feeInput = useRef();
+  const emailInput = useRef();
+  const rewardInput = useRef();
 
   const ERROR = {
     title: '',
@@ -39,6 +66,8 @@ const FormDetail = (props) => {
     email: '',
     date: '',
     time: '',
+    fee: '',
+    isError: false,
   }
   
   useEffect(()=> {
@@ -46,47 +75,107 @@ const FormDetail = (props) => {
     props.fetchresponsible()
   }, [])
   
-  const Validation = () => {
-    
 
+  const validateEmail = (email) =>  { 
+        let re = /\S+@\S+\.\S+/;
+        return re.test(email);
+    }
+
+  const Validation = () => {
+
+    let isError = false;
     if(title == '') {
       ERROR.title = "Title is required."
+      isError = true
       titleInput.current.focus();
     }
 
     if(date == '') {
       ERROR.date = "Date is required."
+      isError = true
       dateInput.current.focus();
     }
 
-    
-    /* if(description == '') {
-      ERROR.description = "Description is required."
-      descriptionInput.current.focus();
-    }*/
+    if(fieldvalue == 'Paid Event') {
+      if(fee == '') {
+        ERROR.fee = "Fee is required."
+        isError = true
+        feeInput.current.focus();
+      }
+    }
 
+    if(email != '') {
+      if(!validateEmail(email)) {
+        ERROR.email = 'Invalid Email Address'
+        isError = true
+        emailInput.current.focus();
+      }
+    }
+
+    if(reward != ''){
+      const re = /^[0-9\b]+$/;
+      if(!re.test(reward)){
+        ERROR.reward = 'Only Numbers allowed'
+        isError = true
+        rewardInput.current.focus();
+      }
+    }
+
+    if(fee != ''){
+      const re = /^[0-9\b]+$/;
+      if(!re.test(fee)){
+        ERROR.fee = 'Only Numbers allowed'
+        isError = true
+        feeInput.current.focus();
+      }
+    }
+    
     setError(ERROR)
+    return isError
+  }
+
+  const setDescriptionvalue = (e) => {
+    console.log('setDescriptionValue===', e)
+    setDescription(e)
   }
 
   const handleSubmit = () => {
-    console.log('title===', title)
-    console.log('description===', description)
-    console.log('category==', category)
-    console.log('fieldvalue==', fieldvalue)
-    console.log('Reward==', reward)
-    console.log('Reward==', reward)
-    console.log('Email=', email)
-    console.log('Date=', date)
-    console.log('Time=', time)
+    const isError = Validation()
 
-    Validation()
+    if(!isError) {
+      console.log('title===', title)
+      console.log('description===', description)
+      console.log('category==', category)
+      console.log('fieldvalue==', fieldvalue)
+      console.log('Fee==', fee)
+      console.log('Reward==', reward)
+      console.log('Responsible=', responsible)
+        
+      console.log('Email=', email)
+      console.log('Date=', date)
+      console.log('Time=', time)
+
+      //create object
+      var finalResult = {
+        title: title,
+        description: description,
+        category_id : category,
+        paid_event: fieldvalue == 'Paid Event' ? true: false,
+        event_fee: fee,
+        reward: reward,
+        date: date,
+        duration: duration,
+      }
+
+      console.log('FinalResult==', finalResult)
+    }
   }
 
- // console.log('cc=', this.props);
   return (
-    <div className="flex-container">
-    <div className="flex-item">
+    <MainDiv>
+        <MainDivTitle>NEW EVENT</MainDivTitle>
         <form>
+          <SubDiv>
           <div className="row">
             <div className="singleColumn">
             About
@@ -98,6 +187,7 @@ const FormDetail = (props) => {
               <div className="column2">
                 <input
                   type="text"
+                  size={50}
                   id="title"
                   ref={titleInput}
                   onChange={(e)=> setTitle(e.target.value)}
@@ -112,7 +202,8 @@ const FormDetail = (props) => {
           <div className="row">
               <div className="column1">DESCRIPTION  *</div>
               <div className="column2">
-                <LimitedTextarea limit={32} value="" onChange={(e)=> setDescription(e.target.value)} />
+                <LimitedTextarea rows={10} cols={60} limit={140} value="" 
+                name="description" id="description" onChange={(e) => setDescriptionvalue(e)} />
               </div>
           </div>
           <div className="row">
@@ -144,6 +235,21 @@ const FormDetail = (props) => {
                 value="Paid Event"
                 onChange={() => setFieldValue("Paid Event")}
                 /><span className="radiolable">Paid Event</span>
+                {fieldvalue == 'Paid Event' && 
+                  <span>
+                    <input
+                      type="text"
+                      name="Fee"
+                      ref={feeInput}
+                      size={10}
+                      onChange={(e)=> setFee(e.target.value)}
+                      required
+                    /><span>$</span>
+                     {error.fee &&
+                      <span className="tooltiptext">{error.fee}</span>
+                    }
+                  </span>
+                }
               </div>
           </div>
           <div className="row">
@@ -154,11 +260,17 @@ const FormDetail = (props) => {
                   id="first-name-input"
                   placeholder="Enter Reward"
                   name="reward"
+                  ref={rewardInput}
                   onChange={(e)=> setReward(e.target.value)}
                   required
                 />
+                {error.reward &&
+                  <span className="tooltiptext">{error.reward}</span>
+                }
               </div>
           </div>
+          </SubDiv>
+          <SubDiv>
           <div className="row">
             <div className="singleColumn">
             Coordinator
@@ -187,11 +299,17 @@ const FormDetail = (props) => {
                   id="email"
                   placeholder="Enter email"
                   name="email"
+                  ref={emailInput}
                   onChange={(e)=> setEmail(e.target.value)}
                   required
                 />
+                {error.email &&
+                  <span className="tooltiptext">{error.email}</span>
+                }
               </div>
           </div>
+          </SubDiv>
+          <SubDiv>
           <div className="row">
             <div className="singleColumn">
             WHEN
@@ -235,15 +353,12 @@ const FormDetail = (props) => {
                 />
               </div>
           </div>
+          </SubDiv>
           <div className="row">
-              <div className="column1"></div>
-              <div className="column2">
-                <input type="button" value="PUBLISH EVENT" onClick={handleSubmit} />
-              </div>
+            <input type="button" value="PUBLISH EVENT" onClick={handleSubmit} />
           </div>
         </form>
-    </div>
-    </div>
+    </MainDiv>
   );
 }
 
